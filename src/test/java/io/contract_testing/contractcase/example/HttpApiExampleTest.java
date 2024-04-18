@@ -38,7 +38,6 @@ public class HttpApiExampleTest {
       .providerName("Java Example HTTP Server")
       .consumerName("Java Example HTTP Client")
       .publish(PublishType.NEVER)
-      .logLevel(LogLevel.DEBUG)
       .contractDir("temp-contracts")
       .build());
 
