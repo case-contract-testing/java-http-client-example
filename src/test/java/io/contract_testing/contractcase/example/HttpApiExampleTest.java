@@ -9,12 +9,10 @@ import io.contract_testing.contractcase.ContractDefiner;
 import io.contract_testing.contractcase.ExampleDefinition;
 import io.contract_testing.contractcase.IndividualFailedTestConfig.IndividualFailedTestConfigBuilder;
 import io.contract_testing.contractcase.IndividualSuccessTestConfig.IndividualSuccessTestConfigBuilder;
-import io.contract_testing.contractcase.LogLevel;
 import io.contract_testing.contractcase.PublishType;
 import io.contract_testing.contractcase.Trigger;
 import io.contract_testing.contractcase.case_example_mock_types.mocks.http.HttpExample;
 import io.contract_testing.contractcase.case_example_mock_types.mocks.http.WillSendHttpRequest;
-import io.contract_testing.contractcase.case_example_mock_types.states.AnyState;
 import io.contract_testing.contractcase.case_example_mock_types.states.InState;
 import io.contract_testing.contractcase.case_example_mock_types.states.InStateWithVariables;
 import io.contract_testing.contractcase.test_equivalence_matchers.convenience.NamedMatch;
@@ -141,7 +139,7 @@ public class HttpApiExampleTest {
 
     contract.runExample(
         new ExampleDefinition<>(
-            List.<AnyState>of(
+            List.of(
                 new InState("Server is up"),
                 new InStateWithVariables("A user exists", Map.of("userId", "123"))
             ),
@@ -178,7 +176,7 @@ public class HttpApiExampleTest {
 
     contract.runExample(
         new ExampleDefinition<>(
-            List.<AnyState>of(
+            List.of(
                 new InState("Server is up"),
                 new InStateWithVariables("A user exists", Map.of("userId", "123"))
             ),
@@ -213,7 +211,7 @@ public class HttpApiExampleTest {
   public void testGetUserWithQueryVariableWhenUserNotExist() {
     contract.runThrowingExample(
         new ExampleDefinition<>(
-            List.<AnyState>of(
+            List.of(
                 new InState("Server is up"),
                 new InStateWithVariables("No users exist", Map.of("userId", "123"))
             ),
@@ -233,7 +231,7 @@ public class HttpApiExampleTest {
               } catch (IOException e) {
                 throw new RuntimeException(e);
               }
-            }).withLogLevel(LogLevel.DEEP_MAINTAINER_DEBUG)
+            })
             .withTestErrorResponse(exception -> {
               assertThat(exception.getClass(), is(UserNotFoundException.class));
             })
