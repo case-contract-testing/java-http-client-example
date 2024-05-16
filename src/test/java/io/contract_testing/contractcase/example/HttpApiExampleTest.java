@@ -9,6 +9,7 @@ import io.contract_testing.contractcase.ContractDefiner;
 import io.contract_testing.contractcase.ExampleDefinition;
 import io.contract_testing.contractcase.IndividualFailedTestConfig.IndividualFailedTestConfigBuilder;
 import io.contract_testing.contractcase.IndividualSuccessTestConfig.IndividualSuccessTestConfigBuilder;
+import io.contract_testing.contractcase.LogLevel;
 import io.contract_testing.contractcase.PublishType;
 import io.contract_testing.contractcase.Trigger;
 import io.contract_testing.contractcase.case_example_mock_types.mocks.http.HttpExample;
@@ -39,9 +40,9 @@ public class HttpApiExampleTest {
       .contractDir("temp-contracts")
       .build());
 
-  Trigger<String> getHealth = (Map<String, Object> config) -> {
+  Trigger<String> getHealth = (setupInfo) -> {
     try {
-      return new ApiClient((String) config.get("baseUrl")).getHealth();
+      return new ApiClient(setupInfo.getInfo("baseUrl")).getHealth();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -86,7 +87,7 @@ public class HttpApiExampleTest {
         IndividualSuccessTestConfigBuilder.<String>builder()
             .withProviderName("Java Example HTTP Server")
             .withTrigger(getHealth)
-            .withTestResponse(status -> {
+            .withTestResponse((status, setupInfo) -> {
               assertThat(status, is("up"));
             })
     );
@@ -108,7 +109,7 @@ public class HttpApiExampleTest {
         IndividualSuccessTestConfigBuilder.<String>builder()
             .withProviderName("Java Example HTTP Server")
             .withTrigger(getHealth)
-            .withTestResponse(status -> {
+            .withTestResponse((status, setupInfo) -> {
               assertThat(status, is("down"));
             })
     );
@@ -127,7 +128,7 @@ public class HttpApiExampleTest {
         IndividualFailedTestConfigBuilder.<String>builder()
             .withProviderName("Java Example HTTP Server")
             .withTrigger(getHealth)
-            .withTestErrorResponse(exception -> {
+            .withTestErrorResponse((exception, setupInfo) -> {
               assertThat(exception.getMessage(), is("The server is not ready"));
             })
     );
@@ -156,16 +157,16 @@ public class HttpApiExampleTest {
         ),
         IndividualSuccessTestConfigBuilder.<User>builder()
             .withProviderName("Java Example HTTP Server")
-            .withTrigger((config) -> {
+            .withTrigger((setupInfo) -> {
               try {
-                return new ApiClient((String) config.get("baseUrl"))
-                    .getUser(((Map<String, String>) config.get("variables")).get("userId"));
+                return new ApiClient(setupInfo.getInfo("baseUrl"))
+                    .getUser(setupInfo.getStateVariable("userId"));
               } catch (IOException e) {
                 throw new RuntimeException(e);
               }
             })
-            .withTestResponse(user -> {
-              assertThat(user.userId(), is("123"));
+            .withTestResponse((user, setupInfo) -> {
+              assertThat(user.userId(), is(setupInfo.getStateVariable("userId")));
             })
     );
   }
@@ -193,16 +194,16 @@ public class HttpApiExampleTest {
         ),
         IndividualSuccessTestConfigBuilder.<User>builder()
             .withProviderName("Java Example HTTP Server")
-            .withTrigger((config) -> {
+            .withTrigger((setupInfo) -> {
               try {
-                return new ApiClient((String) config.get("baseUrl"))
-                    .getUserQuery(((Map<String, String>) config.get("variables")).get("userId"));
+                return new ApiClient(setupInfo.getInfo("baseUrl"))
+                    .getUserQuery(setupInfo.getStateVariable("userId"));
               } catch (IOException e) {
                 throw new RuntimeException(e);
               }
             })
-            .withTestResponse(user -> {
-              assertThat(user.userId(), is("123"));
+            .withTestResponse((user, setupInfo) -> {
+              assertThat(user.userId(), is(setupInfo.getStateVariable("userId")));
             })
     );
   }
@@ -224,15 +225,15 @@ public class HttpApiExampleTest {
         ),
         IndividualFailedTestConfigBuilder.<User>builder()
             .withProviderName("Java Example HTTP Server")
-            .withTrigger((config) -> {
+            .withTrigger((setupInfo) -> {
               try {
-                return new ApiClient((String) config.get("baseUrl"))
-                    .getUserQuery(((Map<String, String>) config.get("variables")).get("userId"));
+                return new ApiClient(setupInfo.getInfo("baseUrl"))
+                    .getUserQuery(setupInfo.getStateVariable("userId"));
               } catch (IOException e) {
                 throw new RuntimeException(e);
               }
             })
-            .withTestErrorResponse(exception -> {
+            .withTestErrorResponse((exception, setupInfo) -> {
               assertThat(exception.getClass(), is(UserNotFoundException.class));
             })
     );
