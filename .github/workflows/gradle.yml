@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [ 17, 20 ]
+        java-version: [ 17 ]
         os: [ macos-latest, ubuntu-latest, windows-latest ]
     permissions:
       contents: read
