@@ -25,8 +25,8 @@ dependencies {
     implementation "org.apache.httpcomponents:fluent-hc:4.5.5"
     testImplementation 'io.contract-testing.contractcase:contract-case:0.1.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.7.18') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
